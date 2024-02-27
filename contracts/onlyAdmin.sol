@@ -1,34 +1,56 @@
-// SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.24;
+// SPDX-License-Identifier: MIT
+pragma solidity^0.8.9;
 
-// Uncomment this line to use console.log
-// import "hardhat/console.sol";
 
-contract Lock {
-    uint public unlockTime;
-    address payable public owner;
+contract OnlyAdmin{
+   
+   string name;
+   uint contact;
+   uint housenumber;
+   address Admin;
 
-    event Withdrawal(uint amount, uint when);
 
-    constructor(uint _unlockTime) payable {
-        require(
-            block.timestamp < _unlockTime,
-            "Unlock time should be in the future"
-        );
 
-        unlockTime = _unlockTime;
-        owner = payable(msg.sender);
+    constructor(){
+
+        Admin = msg.sender;
     }
 
-    function withdraw() public {
-        // Uncomment this line, and the import of "hardhat/console.sol", to print a log in your terminal
-        // console.log("Unlock time is %o and block timestamp is %o", unlockTime, block.timestamp);
 
-        require(block.timestamp >= unlockTime, "You can't withdraw yet");
-        require(msg.sender == owner, "You aren't the owner");
+   modifier TheAdmin {
 
-        emit Withdrawal(address(this).balance, block.timestamp);
+        require( Admin == msg.sender, "not an admin");
 
-        owner.transfer(address(this).balance);
-    }
+      _;
+
+   }
+
+   function setter(string memory _name, uint _contact,uint _houseNum ) external {
+
+       name = _name;
+
+      contact = _contact;
+
+      housenumber = _houseNum;
+
+
+   }
+
+
+   function getter(address)external view TheAdmin returns (uint){
+
+      return contact;
+
+   }
+
+   function Caller(address)external view TheAdmin returns(bool){
+
+         
+      return true;
+
+
+   }
+
+   
+
 }
